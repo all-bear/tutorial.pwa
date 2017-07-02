@@ -1,0 +1,137 @@
+<html>
+<head>
+
+</head>
+<body>
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+    }
+
+    .bg {
+        padding: 70px;
+        height: 100%;
+        background: url("/images/bg.jpg") no-repeat center;
+        background-size: cover;
+        position: relative;
+        box-sizing: border-box;
+    }
+
+    .view-content {
+        width: 100%;
+        height: 100%;
+    }
+
+    .message {
+        position: relative;
+        padding: 50px;
+        color: #333;
+        background: #eee;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+        font-size: 3.5vh;
+        margin: 0;
+    }
+    .message:after {
+        content: "";
+        position: absolute;
+        bottom: -30px;
+        left: 50px;
+        border: 15px solid transparent;
+        border-top-color: #eee;
+        display: block;
+        width: 0;
+    }
+    .author {
+        margin: 15px 0 2em 85px;
+        font-style: italic;
+        font-size: 2vh;
+    }
+    .go-to-top {
+        background-color: #e7e7e7;
+        color: black;
+        border-radius: 12px;
+        display: block;
+        width: 100%;
+        padding: 30px;
+        text-transform: uppercase;
+        font-weight: bolder;
+        border: 1px solid gray;
+        font-size: 2vh;
+    }
+    .form-element {
+        color: #333;
+        background-color: #e7e7e7;
+        border: 1px solid gray;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+        min-height: 50px;
+        display: block;
+        width: 100%;
+        margin-top: 30px;
+        font-size: 2vh;
+        clear: both;
+        padding: 35px;
+    }
+    #message-input {
+        min-height: 200px;
+    }
+    button {
+        text-transform: uppercase !important;
+        font-weight: bolder !important;
+        border: 1px solid gray !important;
+        font-size: 2vh !important;
+    }
+</style>
+<div class="bg">
+    <div class="view-content" id="view-top">
+        <blockquote class="message">
+            <p id="message-holder">Loading...</p>
+        </blockquote>
+        <p class="author" id="author-holder">Loading ..</p>
+        <button class="go-to-top" onclick="View.showCreateTop()">
+            Go To Top
+        </button>
+    </div>
+    <div class="create-content" id="create-top" style="display: none;">
+        <form
+                onsubmit="App.submitTop(View.getTopData()).then(function (data) { View.updateTopData(data).clearCreateTop().showViewTop() });return false;">
+            <textarea id="message-input" class="form-element" placeholder="Your message" required></textarea>
+            <input type="text" id="author-input" class="form-element" placeholder="Your name" required/>
+
+            <button type="button" id="cancel-submit" class="form-element" onclick="View.showViewTop()">
+                Cancel
+            </button>
+            <button type="submit" id="submit-item" class="form-element">
+                Submit
+            </button>
+        </form>
+
+    </div>
+</div>
+<script src="/js/view.js"></script>
+<script src="/js/app.js"></script>
+<script>
+    (function () {
+        var timeout;
+
+        function initTimeout() {
+            clearTimeout(timeout);
+
+            timeout = setTimeout(function () {
+                App.requestTop().then(function (data) {
+                    View.updateTopData(data);
+
+                    initTimeout();
+                });
+            }, 100);
+        }
+
+        initTimeout();
+    })();
+</script>
+</body>
+</html>
