@@ -116,21 +116,15 @@
 <script src="/js/app.js"></script>
 <script>
     (function () {
-        var timeout;
+        if (typeof(Worker) !== "undefined") {
+            var w = new Worker("/js/worker.js");
 
-        function initTimeout() {
-            clearTimeout(timeout);
-
-            timeout = setTimeout(function () {
-                App.requestTop().then(function (data) {
-                    View.updateTopData(data);
-
-                    initTimeout();
-                });
-            }, 100);
+            w.onmessage = function(event) {
+                View.updateTopData(JSON.parse(event.data));
+            };
+        } else {
+            alert('No Workers Support');
         }
-
-        initTimeout();
     })();
 </script>
 </body>
